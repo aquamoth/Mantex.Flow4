@@ -1,4 +1,6 @@
-﻿using Flow4.Machine;
+﻿using Flow4.Entities;
+using Flow4.Framework;
+using Flow4.Machine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,29 +9,35 @@ using System.Threading.Tasks;
 
 namespace Flow4.Sample.Controllers
 {
-    public class Ordinator : BaseController
+    public class Ordinator
     {
         Executive executive;
+        HashSet<object> resources;
 
         public Ordinator()
-            : base(0)
         {
+            resources = new HashSet<object>();
+            createFrameFeedResource("Raw High Energy Frame");
+            createFrameFeedResource("Raw Low Energy Frame");
 
+            executive = new Executive(resources);
         }
 
-        public override void Start()
+        public void Start()
         {
-            base.Start();
-            executive = new Executive();
             executive.Start();
         }
 
-        public override void Stop()
+        public void Stop()
         {
             executive.Stop();
-            executive = null;
-            base.Stop();
         }
-    
+
+        private void createFrameFeedResource(string name)
+        {
+            var feed = new Feed<IFrame>(name);
+            feed.Start();
+            resources.Add(feed);
+        }
     }
 }

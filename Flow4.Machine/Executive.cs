@@ -9,18 +9,21 @@ namespace Flow4.Machine
 {
     public class Executive
     {
-        IScanner scanner;
-        IMarshaller marshaller;
+        Scanner scanner;
+        Marshaller marshaller;
+
+        public Executive(HashSet<object> resources)
+        {
+            scanner = new Scanner(resources);
+            marshaller = new Marshaller(resources);
+        }
 
         public void Start()
         {
-            scanner = new Scanner();
-            marshaller = new Marshaller();
-
-            scanner.FrameCreated += (sender, e) =>
-            {
-                marshaller.Send(e.Frame);
-            };
+            //scanner.FrameCreated += (sender, e) =>
+            //{
+            //    marshaller.Send(e.Frame);
+            //};
 
             marshaller.Start();
             scanner.Start();

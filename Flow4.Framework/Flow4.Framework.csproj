@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseController.cs" />
-    <Compile Include="FrameCreatedEventArgs.cs" />
+    <Compile Include="Feed.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
