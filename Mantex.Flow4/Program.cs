@@ -13,21 +13,12 @@ namespace Flow4.Sample
     {
         static void Main(string[] args)
         {
-            IScanner scanner = new Controllers.Scanner();
-            IMarshaller marshaller = new Controllers.Marshaller();
-
-            scanner.FrameCreated += (sender, e) =>
-            {
-                marshaller.Send(e.Frame);
-            };
-
-            marshaller.Start();
-            scanner.Start();
+            var ordinator = new Ordinator();
+            ordinator.Start();
 
             Console.ReadLine();
-            
-            scanner.Stop();
-            marshaller.Stop();
+
+            ordinator.Stop();
         }
     }
 

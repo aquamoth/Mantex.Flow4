@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Flow4.Sample.Controllers
 {
-    interface IController
+    public interface IController
     {
         bool IsAlive { get; }
         void Start();

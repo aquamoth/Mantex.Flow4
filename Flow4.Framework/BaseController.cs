@@ -20,16 +20,22 @@ namespace Flow4.Sample.Controllers
 
         public virtual void Start()
         {
-            heartbeat = new Timer(new TimerCallback(OnHeartbeat), null, 0, _heartbeatInterval);
+            heartbeat = _heartbeatInterval > 0
+                ? new Timer(new TimerCallback(OnHeartbeat), null, 0, _heartbeatInterval)
+                : null;
         }
 
         public virtual void Stop()
         {
-            heartbeat.Dispose();
-            heartbeat = null;
-            //TODO: Await completion of the current heartbeat before returning
-            Debug.WriteLine("Waiting for heartbeat to complete.");
-            Thread.Sleep(3000);
+            if (heartbeat != null)
+            {
+                heartbeat.Dispose();
+                heartbeat = null;
+
+                //TODO: Await completion of the current heartbeat before returning
+                //Debug.WriteLine("Waiting for heartbeat to complete.");
+                //Thread.Sleep(3000);
+            }
         }
 
         public bool IsAlive { get { return heartbeat != null; } }
