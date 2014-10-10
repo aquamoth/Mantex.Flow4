@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Flow4.Sample.Controllers
 {
-    public class BaseController : Flow4.Sample.Controllers.IController
+    public class BaseController : IController, IDisposable
     {
         readonly uint _heartbeatInterval;
         Timer heartbeat = null;
@@ -39,6 +39,18 @@ namespace Flow4.Sample.Controllers
         }
 
         public bool IsAlive { get { return heartbeat != null; } }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (IsAlive)
+                Stop();
+        }
 
         protected virtual void OnHeartbeat(object state)
         {

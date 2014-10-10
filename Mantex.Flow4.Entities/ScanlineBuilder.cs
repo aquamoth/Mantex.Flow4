@@ -1,6 +1,7 @@
 ﻿using Flow4.Entities.Base;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +20,12 @@ namespace Flow4.Entities
 
         ~ScanlineBuilder()
         {
-            System.Diagnostics.Trace.TraceInformation("Scanline finalizer for {0}", Id);
+            //System.Diagnostics.Trace.TraceInformation("Scanline finalizer for {0}", Id);
             if (ReturnToPool != null)
-                throw new ApplicationException("ScanlineBuilder finalized when expected to be returned to a pool!");
+            {
+                Trace.TraceError("Scanline finalizer called for {0} when expecting to Dispose() back to pool!", Id);
+                //throw new ApplicationException("ScanlineBuilder finalized when expected to be returned to a pool!");
+            }
         }
 
         IEnumerable<byte> IScanline.Pixels { get { return Pixels.AsEnumerable(); } }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Flow4.Entities
 {
-    public interface IFrame : IEntity, IDisposable
+    public interface IFrame : IRefCountedEntity
     {
         IEnumerable<IScanline> Lines { get; }
     }

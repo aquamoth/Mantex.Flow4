@@ -13,12 +13,14 @@ namespace Flow4.Sample
     {
         static void Main(string[] args)
         {
-            var ordinator = new Ordinator();
-            ordinator.Start();
+            using(var ordinator = new Ordinator())
+            {
+                ordinator.Start();
 
-            Console.ReadLine();
+                Console.ReadLine();
 
-            ordinator.Stop();
+                ordinator.Stop();
+            }
         }
     }
 

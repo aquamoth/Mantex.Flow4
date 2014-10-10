@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Flow4.Entities.Base
 {
+    public interface IRefCountedEntity : IEntity, IDisposable
+    {
+        void IncreaseRefCounter();
+    }
+
     public interface IEntity
     {
         Guid Id { get; }

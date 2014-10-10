@@ -12,7 +12,7 @@ namespace Flow4.Machine
 {
     class Detector : BaseController
     {
-        const int SCANLINES_PER_FRAME = 100;
+        const int SCANLINES_PER_FRAME = 1000;
 
         object _lockObject = new object();
 
@@ -23,7 +23,7 @@ namespace Flow4.Machine
         FrameBuilder frameBuilderLowEnergy = null;
 
         public Detector(HashSet<object> resources)
-            : base(100)
+            : base(500)
         {
             var frameFeedResources = resources.OfType<Feed<IFrame>>();
             frameFeedHighEnergy = frameFeedResources
@@ -73,12 +73,14 @@ namespace Flow4.Machine
                 foreach (var frame in committedFramesHighEnergy)
                 {
                     frameFeedHighEnergy.Enqueue(frame);
+                    frame.Dispose();
                     //Trace.TraceInformation("Wrote frame {0}", frame.Id);
                     //OnFrameCreated(new FrameCreatedEventArgs { Frame = frame });
                 }
                 foreach (var frame in committedFramesLowEnergy)
                 {
                     frameFeedLowEnergy.Enqueue(frame);
+                    frame.Dispose();
                     //Trace.TraceInformation("Wrote frame {0}", frame.Id);
                     //OnFrameCreated(new FrameCreatedEventArgs { Frame = frame });
                 }
@@ -99,10 +101,16 @@ namespace Flow4.Machine
             }
         }
 
+        //int DEBUG_READ_COUNTER = 8;
         Random _rnd = new Random();
         private IEnumerable<IScanline> readScanlineFromHardware()
         {
-            var numberOfNewScanlinesInHardwareBuffer = _rnd.Next(9, 12);
+
+            //if (DEBUG_READ_COUNTER <= 0)
+            //    yield break;
+            //DEBUG_READ_COUNTER--;
+
+            var numberOfNewScanlinesInHardwareBuffer = _rnd.Next(480, 520);
             var builders = ScanlinePool.Instance.Take(numberOfNewScanlinesInHardwareBuffer);
             foreach (var scanLine in builders)
             {

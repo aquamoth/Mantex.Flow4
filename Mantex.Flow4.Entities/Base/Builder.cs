@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace Flow4.Entities.Base
 {
-    public abstract class Builder<T> : BaseEntity
+    public interface IBuilder<T>
+        where T : class, IEntity
+    {
+        T Commit();
+    }
+
+    public abstract class Builder<T> : BaseEntity, IBuilder<T>
         where T : class, IEntity
     {
         public virtual T Commit()

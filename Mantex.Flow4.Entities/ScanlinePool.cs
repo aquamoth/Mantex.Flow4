@@ -33,7 +33,6 @@ namespace Flow4.Entities
 
         #endregion Singleton pattern
 
-        HashSet<ScanlineBuilder> allocatedObjects;
         Queue<ScanlineBuilder> freeObjects;
 
         int _numberOfPixels;
@@ -46,16 +45,15 @@ namespace Flow4.Entities
             set
             {
                 System.Diagnostics.Trace.Assert(freeObjects.Count == 0);
-                System.Diagnostics.Trace.Assert(allocatedObjects.Count == 0);
                 _numberOfPixels = value;
             }
         }
 
-        public Tuple<int, int> PerformanceIndex { get { return new Tuple<int, int>(freeObjects.Count, allocatedObjects.Count); } }
+#warning "PerformanceIntex needs to be redesigned"
+        public Tuple<int, int> PerformanceIndex { get { return new Tuple<int, int>(freeObjects.Count, 0); } }//allocatedObjects.Count
 
         private ScanlinePool()
         {
-            allocatedObjects = new HashSet<ScanlineBuilder>();
             freeObjects = new Queue<ScanlineBuilder>();
         }
 
@@ -88,7 +86,6 @@ namespace Flow4.Entities
                     {
                         var builder = freeObjects.Dequeue();
                         builder.ReturnToPool += returnToPoolCallback;
-                        allocatedObjects.Add(builder);
                         return builder;
                     }).ToArray();
             }
@@ -103,10 +100,6 @@ namespace Flow4.Entities
                 {
                     var builder = new ScanlineBuilder(_numberOfPixels);
                     builder.ReturnToPool += returnToPoolCallback;
-                    lock (_lockObject)
-                    {
-                        allocatedObjects.Add(builder);
-                    }
                     //Debug.WriteLine("Created new object: " + builder.GetHashCode());
                     yield return builder;
                 }
@@ -120,7 +113,6 @@ namespace Flow4.Entities
             builder.ReturnToPool -= returnToPoolCallback;
             lock(_lockObject)
             {
-                allocatedObjects.Remove(builder);
                 freeObjects.Enqueue(builder);
             }
             //Debug.WriteLine("Returned object to pool: " + builder.GetHashCode());

@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace Flow4.Machine
 {
-    public class Executive
+    public class Executive : BaseController
     {
         Scanner scanner;
         Marshaller marshaller;
 
         public Executive(HashSet<object> resources)
+            : base(0)
         {
             scanner = new Scanner(resources);
             marshaller = new Marshaller(resources);
@@ -20,11 +21,6 @@ namespace Flow4.Machine
 
         public void Start()
         {
-            //scanner.FrameCreated += (sender, e) =>
-            //{
-            //    marshaller.Send(e.Frame);
-            //};
-
             marshaller.Start();
             scanner.Start();
         }
@@ -33,6 +29,16 @@ namespace Flow4.Machine
         {
             scanner.Stop();
             marshaller.Stop();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if(disposing)
+            {
+                marshaller.Dispose();
+                scanner.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

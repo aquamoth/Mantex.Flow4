@@ -39,6 +39,13 @@ namespace Flow4.Sample.Controllers
             base.Start();
         }
 
+        public override void Stop()
+        {
+            base.Stop();
+            detector.Stop();
+            xray.Stop();
+        }
+
         //public void Run(IWorkOrder order)
         //{
 

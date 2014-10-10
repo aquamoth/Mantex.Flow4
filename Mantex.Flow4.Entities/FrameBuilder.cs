@@ -10,17 +10,20 @@ namespace Flow4.Entities
 {
     public class FrameBuilder : Builder<IFrame>, IFrame, IDisposable
     {
+        int _referenceCounter = 1;
+
         public ICollection<IScanline> Lines { get; private set; }
 
         public FrameBuilder() 
             : base()
         {
             Lines = new List<IScanline>();
+            //System.Diagnostics.Trace.TraceInformation("FrameBuilder created for {0}", Id);
         }
 
         ~FrameBuilder()
         {
-            System.Diagnostics.Trace.TraceInformation("FrameBuilder finalizer for {0}", Id);
+            System.Diagnostics.Trace.TraceWarning("FrameBuilder finalizer for {0}", Id);
             Dispose(false);
         }
 
@@ -34,6 +37,7 @@ namespace Flow4.Entities
 
         public void Dispose()
         {
+            //System.Diagnostics.Trace.TraceInformation("FrameBuilder Dispose for {0}", Id);
             Dispose(true);
             GC.SuppressFinalize(this);
         }
@@ -42,13 +46,18 @@ namespace Flow4.Entities
         {
             if (disposing)
             {
-                foreach (var scanline in Lines)
+                if (--_referenceCounter == 0)
                 {
-                    scanline.Dispose();
+                    foreach (var scanline in Lines)
+                    {
+                        scanline.Dispose();
+                    }
+                    Lines = null;
+                    Trace.TraceInformation("AFTER Disposing: {0} allocated and {1} free objects.", ScanlinePool.Instance.PerformanceIndex.Item2, ScanlinePool.Instance.PerformanceIndex.Item1);
                 }
-                Lines = null;
             }
-            Trace.TraceInformation("AFTER Disposing: {0} allocated and {1} free objects.", ScanlinePool.Instance.PerformanceIndex.Item2, ScanlinePool.Instance.PerformanceIndex.Item1);
         }
+
+        public void IncreaseRefCounter() { _referenceCounter++; }
     }
 }
