@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Flow4.Sample.Controllers
+namespace Flow4.Framework
 {
-    public class BaseController : IController, IDisposable
+    public class BaseController : IController
     {
         readonly uint _heartbeatInterval;
         Timer heartbeat = null;

@@ -1,36 +1,33 @@
 ﻿using Flow4.Entities;
-using Flow4.Machine;
+using Flow4.Framework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Flow4.Sample.Controllers
+namespace Flow4.Machine
 {
-    public class Scanner : BaseController
+    public class Scanner : BaseController, IScanner
     {
         //object _lockObject = new object();
         //FrameBuilder frameBuilder = null;
 
         Xray xray;
-        Detector detector;
+        //Detector detector;
 
-        readonly HashSet<object> _resources;
+        //readonly HashSet<object> _resources;
 
-        public Scanner(HashSet<object> resources) 
+        public Scanner(/*HashSet<object> resources*/) 
             : base(100)
         {
-            this._resources = resources;
+            //this._resources = resources;
             ScanlinePool.Instance.NumberOfPixels = 1024;
         }
+
+        public IDetector detector { get; set; }
 
         public override void Start()
         {
             xray = new Xray();
-            detector = new Detector(_resources);
+            //detector = new Detector(_resources);
 
             xray.Start();
             detector.Start();

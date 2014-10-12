@@ -1,4 +1,5 @@
-﻿using Flow4.Sample.Controllers;
+﻿using Flow4.Framework;
+using Flow4.Sample.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,28 +8,37 @@ using System.Threading.Tasks;
 
 namespace Flow4.Machine
 {
-    public class Executive : BaseController
+    public class Executive : BaseController, IExecutive
     {
-        Scanner scanner;
-        Marshaller marshaller;
+        IScanner scanner;
+        IMarshaller marshaller;
 
-        public Executive(HashSet<object> resources)
+        public Executive(IScanner scanner, IMarshaller marshaller /*, HashSet<object> resources*/)
             : base(0)
         {
-            scanner = new Scanner(resources);
-            marshaller = new Marshaller(resources);
+            //HashSet<object> resources = new HashSet<object>();
+            this.scanner = scanner;// new Scanner(resources);
+            this.marshaller = marshaller;// new Marshaller(resources);
         }
 
-        public void Start()
+        //void IDisposable.Dispose()
+        //{
+        //    Dispose(true);
+        //    GC.SuppressFinalize(this);
+        //}
+
+        public override void Start()
         {
+            base.Start();
             marshaller.Start();
             scanner.Start();
         }
 
-        public void Stop()
+        public override void Stop()
         {
             scanner.Stop();
             marshaller.Stop();
+            base.Stop();
         }
 
         protected override void Dispose(bool disposing)

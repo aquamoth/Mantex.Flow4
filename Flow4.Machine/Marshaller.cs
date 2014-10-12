@@ -1,5 +1,7 @@
 ﻿using Flow4.Entities;
+using Flow4.Entities.Base;
 using Flow4.Framework;
+using Flow4.Sample.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,26 +9,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flow4.Sample.Controllers
+namespace Flow4.Machine
 {
-    public class Marshaller : BaseController
+
+    public class Marshaller : BaseController, IMarshaller
     {
         object _lockObject = new object();
         FeedOutputQueue<IFrame> _highEnergyFrameFeedQueue;
         FeedOutputQueue<IFrame> _lowEnergyFrameFeedQueue;
 
-        public Marshaller(HashSet<object> resources)
+        public Marshaller(IFeedFactory feedFactory/*HashSet<object> resources*/)
             : base(1000)
         {
-            var frameFeedResources = resources.OfType<Feed<IFrame>>();
-            
-            _highEnergyFrameFeedQueue = frameFeedResources
-                .Single(feed => feed.Name == "Raw High Energy Frame")
-                .Subscribe();
+            //var feedFactory = kernel.Resolve<IFeedFactory>();
+            var highEnergyFrameFeed = feedFactory.GetFeedOf<IFrame>("RawHighEnergyFrameFeed");
+            _highEnergyFrameFeedQueue = highEnergyFrameFeed.Subscribe();
 
-            _lowEnergyFrameFeedQueue = frameFeedResources
-                .Single(feed => feed.Name == "Raw Low Energy Frame")
-                .Subscribe();
+            var lowEnergyFrameFeed = feedFactory.GetFeedOf<IFrame>("RawLowEnergyFrameFeed");
+            _lowEnergyFrameFeedQueue = lowEnergyFrameFeed.Subscribe();
+            
+            //var frameFeedResources = resources.OfType<Feed<IFrame>>();
+            
+            //_highEnergyFrameFeedQueue = frameFeedResources
+            //    .Single(feed => feed.Name == "Raw High Energy Frame")
+            //    .Subscribe();
+
+            //_lowEnergyFrameFeedQueue = frameFeedResources
+            //    .Single(feed => feed.Name == "Raw Low Energy Frame")
+            //    .Subscribe();
 
             Trace.TraceInformation("Marshaller initialized ({0} ,{1}).", _highEnergyFrameFeedQueue.Count, _lowEnergyFrameFeedQueue.Count);
         }

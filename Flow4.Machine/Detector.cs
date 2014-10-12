@@ -10,26 +10,33 @@ using System.Threading.Tasks;
 
 namespace Flow4.Machine
 {
-    class Detector : BaseController
+    public interface IDetector: IController
+    {
+
+    }
+
+    public class Detector : BaseController, IDetector
     {
         const int SCANLINES_PER_FRAME = 1000;
 
         object _lockObject = new object();
 
-        Feed<IFrame> frameFeedHighEnergy;
-        Feed<IFrame> frameFeedLowEnergy;
+        IFeed<IFrame> frameFeedHighEnergy;
+        IFeed<IFrame> frameFeedLowEnergy;
 
         FrameBuilder frameBuilderHighEnergy = null;
         FrameBuilder frameBuilderLowEnergy = null;
 
-        public Detector(HashSet<object> resources)
+        public Detector(IFeedFactory feedFactory/*HashSet<object> resources*/)
             : base(500)
         {
-            var frameFeedResources = resources.OfType<Feed<IFrame>>();
-            frameFeedHighEnergy = frameFeedResources
-                .Single(feed => feed.Name == "Raw High Energy Frame");
-            frameFeedLowEnergy = frameFeedResources
-                .Single(feed => feed.Name == "Raw Low Energy Frame");
+            frameFeedHighEnergy = feedFactory.GetFeedOf<IFrame>("RawHighEnergyFrameFeed");
+            frameFeedLowEnergy = feedFactory.GetFeedOf<IFrame>("RawLowEnergyFrameFeed");
+            //var frameFeedResources = resources.OfType<Feed<IFrame>>();
+            //frameFeedHighEnergy = frameFeedResources
+            //    .Single(feed => feed.Name == "Raw High Energy Frame");
+            //frameFeedLowEnergy = frameFeedResources
+            //    .Single(feed => feed.Name == "Raw Low Energy Frame");
         }
 
         public override void Start()

@@ -41,7 +41,11 @@
   <ItemGroup>
     <Compile Include="BaseController.cs" />
     <Compile Include="Feed.cs" />
+    <Compile Include="FeedFactory.cs" />
+    <Compile Include="FeedOutputQueue.cs" />
     <Compile Include="IController.cs" />
+    <Compile Include="IFeed.cs" />
+    <Compile Include="IFeedFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

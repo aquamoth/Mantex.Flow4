@@ -1,4 +1,7 @@
-﻿using Flow4.Sample.Controllers;
+﻿using Castle.Facilities.TypedFactory;
+using Castle.Windsor;
+using Castle.Windsor.Installer;
+using Flow4.Sample.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,14 +16,17 @@ namespace Flow4.Sample
     {
         static void Main(string[] args)
         {
-            using(var ordinator = new Ordinator())
-            {
-                ordinator.Start();
+            var container = new WindsorContainer();
+            container.Kernel.AddFacility<TypedFactoryFacility>();
+            container.Install(FromAssembly.This());
 
-                Console.ReadLine();
+            var ordinator = container.Resolve<IOrdinator>();
+            ordinator.Start();
 
-                ordinator.Stop();
-            }
+            Console.ReadLine();
+
+            ordinator.Stop();
+            container.Dispose();
         }
     }
 

@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace Flow4.Sample.Controllers
 {
-    public class Ordinator : IDisposable
+    public class Ordinator : IOrdinator, IDisposable
     {
-        Executive executive;
-        HashSet<object> resources;
+        IExecutive executive;
+        //HashSet<object> resources;
 
-        public Ordinator()
+        public Ordinator(IExecutive executive)
         {
-            resources = new HashSet<object>();
-            createFrameFeedResource("Raw High Energy Frame");
-            createFrameFeedResource("Raw Low Energy Frame");
-
-            executive = new Executive(resources);
+            //resources = new HashSet<object>();
+            //createFrameFeedResource("Raw High Energy Frame");
+            //createFrameFeedResource("Raw Low Energy Frame");
+            //executive = new Executive(resources);
+            this.executive = executive;
         }
 
         public void Start()
@@ -38,19 +38,19 @@ namespace Flow4.Sample.Controllers
         {
             executive.Dispose();
 
-            foreach (var feed in resources.OfType<Feed<IFrame>>())
-            {
-                Trace.TraceInformation("Disposing feed '{0}'.", feed.Name);
-                feed.Stop();
-                feed.Dispose();
-            }
+            //foreach (var feed in resources.OfType<Feed<IFrame>>())
+            //{
+            //    Trace.TraceInformation("Disposing feed '{0}'.", feed.Name);
+            //    feed.Stop();
+            //    feed.Dispose();
+            //}
         }
 
-        private void createFrameFeedResource(string name)
-        {
-            var feed = new Feed<IFrame>(name);
-            feed.Start();
-            resources.Add(feed);
-        }
+        //private void createFrameFeedResource(string name)
+        //{
+        //    var feed = new Feed<IFrame>(name);
+        //    feed.Start();
+        //    resources.Add(feed);
+        //}
     }
 }
