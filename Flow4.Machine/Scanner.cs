@@ -10,7 +10,7 @@ namespace Flow4.Machine
         //object _lockObject = new object();
         //FrameBuilder frameBuilder = null;
 
-        Xray xray;
+        //Xray xray;
         //Detector detector;
 
         //readonly HashSet<object> _resources;
@@ -22,15 +22,16 @@ namespace Flow4.Machine
             ScanlinePool.Instance.NumberOfPixels = 1024;
         }
 
-        public IDetector detector { get; set; }
+        public IDetector Detector { get; set; }
+        public IXray Xray { get; set; }
 
         public override void Start()
         {
-            xray = new Xray();
+            //xray = new Xray();
             //detector = new Detector(_resources);
 
-            xray.Start();
-            detector.Start();
+            Xray.Start();
+            Detector.Start();
 
             //frameBuilder = new FrameBuilder();
             base.Start();
@@ -39,8 +40,8 @@ namespace Flow4.Machine
         public override void Stop()
         {
             base.Stop();
-            detector.Stop();
-            xray.Stop();
+            Detector.Stop();
+            Xray.Stop();
         }
 
         //public void Run(IWorkOrder order)

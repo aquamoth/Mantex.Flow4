@@ -45,6 +45,7 @@
     <Compile Include="EventArgs\FrameCreatedEventArgs.cs" />
     <Compile Include="IExecutive.cs" />
     <Compile Include="IScanner.cs" />
+    <Compile Include="IXray.cs" />
     <Compile Include="Marshaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scanner.cs" />
