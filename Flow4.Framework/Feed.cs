@@ -27,7 +27,7 @@ namespace Flow4.Framework
             this.Name = name;
             this.MaxQueueSize = capacity;
 
-            this.WritePosition = -1;
+            this.WritePosition = 0;
             
             _queue = new T[MaxQueueSize];
             _outputQueues = new HashSet<FeedOutputQueue<T>>();
@@ -72,9 +72,6 @@ namespace Flow4.Framework
 
                 var nextPosition = WritePosition;
 
-                if (nextPosition == -1)
-                    nextPosition++;
-
                 _queue[nextPosition++] = item;
 
                 if (nextPosition == MaxQueueSize)
@@ -94,15 +91,9 @@ namespace Flow4.Framework
 
         private void evictEmptyQueueEntries()
         {
-            if (WritePosition == -1)
-                return;
-
             lock (_lockObject)
             {
-                //var timer = new Stopwatch();
-                //timer.Start();
-
-                var readPositions = _outputQueues.Select(q => q.ReadPosition);
+                var readPositions = _outputQueues.Select(q => q.CurrentPosition);
 
                 //Clear array after write cursor to last read cursor or end or array
                 var lastIndex = readPositions
@@ -115,14 +106,11 @@ namespace Flow4.Framework
                 if (lastIndex == MaxQueueSize)
                 {
                     lastIndex = readPositions
-                        .Where(p => p < WritePosition)
+                        .Where(p => p <= WritePosition)
                         .DefaultIfEmpty(0)
                         .Min();
                     disposeQueue(0, lastIndex);
                 }
-
-                //timer.Stop();
-                //Trace.TraceInformation("Evicting old feed entries took {0} ms.", timer.ElapsedMilliseconds);
             }
         }
 
@@ -142,7 +130,7 @@ namespace Flow4.Framework
 
         private void verifyQueueNotOverflowed()
         {
-            if (_outputQueues.Any(p => p.ReadPosition == WritePosition))
+            if (_outputQueues.Any(p => p.CurrentPosition == WritePosition))
             {
                 throw new StackOverflowException(string.Format("Feed '{0}' overflowed.", Name));
             }
