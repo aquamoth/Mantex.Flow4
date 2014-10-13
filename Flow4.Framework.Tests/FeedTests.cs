@@ -6,12 +6,6 @@ using System.Collections;
 
 namespace Flow4.Framework.Tests
 {
-    class TestValue : BaseRefCountedEntity
-    {
-        public int Value { get; set; }
-        public TestValue(int value) { Value = value; }
-    }
-
     [TestClass]
     public class FeedTests
     {
@@ -88,5 +82,32 @@ namespace Flow4.Framework.Tests
             CollectionAssert.AreEqual(new[] { 2 }, subscriber1.Select(x => x.Value).ToArray());
         }
 
+        [TestMethod]
+        public void Feeds_factory_creates_named_feeds_once()
+        {
+            var factory = new FeedFactory();
+            var feed = factory.GetFeedOf<TestValue>("Test");
+            Assert.IsNotNull(feed);
+            var feed2 = factory.GetFeedOf<TestValue>("Test");
+            Assert.AreSame(feed, feed2);
+        }
+
+        [TestMethod]
+        public void Feeds_factory_creates_different_named_feeds()
+        {
+            var factory = new FeedFactory();
+            var feed = factory.GetFeedOf<TestValue>("Test");
+            Assert.IsNotNull(feed);
+            var feed2 = factory.GetFeedOf<TestValue>("Test2");
+            Assert.AreNotSame(feed, feed2);
+        }
+
+
+    }
+
+    class TestValue : BaseRefCountedEntity
+    {
+        public int Value { get; set; }
+        public TestValue(int value) { Value = value; }
     }
 }
