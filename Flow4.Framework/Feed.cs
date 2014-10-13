@@ -21,11 +21,11 @@ namespace Flow4.Framework
         public int MaxQueueSize { get; private set; }
         internal int WritePosition { get; private set; }
         
-        public Feed(string name, int maxQueueSize = 10)
+        public Feed(string name, int capacity = 10)
             : base(1000)
         {
             this.Name = name;
-            this.MaxQueueSize = maxQueueSize;
+            this.MaxQueueSize = capacity;
 
             this.WritePosition = -1;
             

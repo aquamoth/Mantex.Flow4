@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Flow4.Machine
 {
-    public class Detector : BaseController, IDetector
+    public class Detector : BaseMachineController, IDetector
     {
         const int SCANLINES_PER_FRAME = 1000;
 
@@ -22,40 +22,38 @@ namespace Flow4.Machine
         FrameBuilder frameBuilderHighEnergy = null;
         FrameBuilder frameBuilderLowEnergy = null;
 
-        public Detector(IFeedFactory feedFactory/*HashSet<object> resources*/)
+        public Detector(IFeedFactory feedFactory)
             : base(500)
         {
             frameFeedHighEnergy = feedFactory.GetFeedOf<IFrame>("RawHighEnergyFrameFeed");
             frameFeedLowEnergy = feedFactory.GetFeedOf<IFrame>("RawLowEnergyFrameFeed");
-            //var frameFeedResources = resources.OfType<Feed<IFrame>>();
-            //frameFeedHighEnergy = frameFeedResources
-            //    .Single(feed => feed.Name == "Raw High Energy Frame");
-            //frameFeedLowEnergy = frameFeedResources
-            //    .Single(feed => feed.Name == "Raw Low Energy Frame");
         }
 
-        public override void Start()
+        protected override async Task<bool> OnStart()
         {
             frameBuilderHighEnergy = new FrameBuilder();
             frameBuilderLowEnergy = new FrameBuilder();
-            base.Start();
+
+            var success = await base.OnStart();
+            return success;
         }
 
-        public override void Stop()
+        protected override async Task<bool> OnStop()
         {
-            base.Stop();
-            
             frameBuilderHighEnergy.Dispose();
             frameBuilderHighEnergy = null;
 
             frameBuilderLowEnergy.Dispose();
             frameBuilderLowEnergy = null;
+
+            var success = await base.Stop();
+            return success;
         }
 
-        protected override void OnHeartbeat(object state)
+        protected override void OnHeartbeat()
         {
+            base.OnHeartbeat();
             processNewScanlines();
-            base.OnHeartbeat(state);
         }
 
         private void processNewScanlines()
@@ -120,14 +118,6 @@ namespace Flow4.Machine
                 yield return scanLine.Commit();
             }
         }
-
-        //public event EventHandler<FrameCreatedEventArgs> FrameCreated;
-        //protected void OnFrameCreated(FrameCreatedEventArgs e)
-        //{
-        //    Trace.TraceInformation("Created frame {0}", e.Frame.Id);
-        //    if (FrameCreated != null)
-        //        FrameCreated(this, e);
-        //}
 
     }
 }

@@ -10,10 +10,12 @@ namespace Flow4.Framework
     public class FeedFactory : IFeedFactory
     {
         Dictionary<string, IFeed> feeds;
+        int capacity;
 
-        public FeedFactory()
+        public FeedFactory(int capacity = 100)
         {
-            feeds = new Dictionary<string, IFeed>();
+            this.feeds = new Dictionary<string, IFeed>();
+            this.capacity = capacity;
         }
 
         public void Dispose()
@@ -39,7 +41,7 @@ namespace Flow4.Framework
             }
             else
             {
-                var feed = new Feed<T>(name);
+                var feed = new Feed<T>(name, capacity);
                 feed.Start();
                 feeds.Add(name, feed as IFeed);
                 return feed;

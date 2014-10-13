@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Flow4.Machine
 {
-    public interface IDetector : IController
+    public interface IDetector : IMachineController
     {
 
     }
