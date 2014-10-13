@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Flow4.Entities.Base
 {
-    public interface IRefCountedEntity : IEntity, IDisposable
+    public interface IRefCountedEntity : IEntity
     {
         void IncreaseRefCounter();
     }

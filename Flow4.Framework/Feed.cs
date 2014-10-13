@@ -132,7 +132,9 @@ namespace Flow4.Framework
             {
                 if (_queue[i] != null)
                 {
-                    _queue[i].Dispose();
+                    var disposableItem = _queue[i] as IDisposable;
+                    if (disposableItem != null)
+                        disposableItem.Dispose();
                     _queue[i] = default(T);
                 }
             }

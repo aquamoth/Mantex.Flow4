@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Flow4.Entities
 {
+//TODO: Base on BaseRefCountedEntity instead of "stupid" Builder<>
     public class FrameBuilder : Builder<IFrame>, IFrame, IDisposable
     {
         int _referenceCounter = 1;

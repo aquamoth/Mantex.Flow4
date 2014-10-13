@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\BaseEntity.cs" />
+    <Compile Include="Base\BaseRefCountedEntity.cs" />
     <Compile Include="Base\Builder.cs" />
     <Compile Include="Base\IEntity.cs" />
     <Compile Include="FrameBuilder.cs" />
