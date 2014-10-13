@@ -10,11 +10,6 @@ using System.Threading.Tasks;
 
 namespace Flow4.Machine
 {
-    public interface IDetector: IController
-    {
-
-    }
-
     public class Detector : BaseController, IDetector
     {
         const int SCANLINES_PER_FRAME = 1000;

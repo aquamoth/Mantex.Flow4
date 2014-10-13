@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace Flow4.Machine
 {
-    class Xray : BaseController
+    public interface IDetector : IController
     {
-        public Xray()
-            : base(1000)
-        {
-        }
+
     }
 }

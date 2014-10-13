@@ -20,6 +20,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Framework", "Framework", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flow4.Analyze", "Flow4.Analyze\Flow4.Analyze.csproj", "{A0E35549-178F-4EA1-B0DA-BDED57DBAA33}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3FC3932F-BD67-4DA2-8BEE-7C84815BB75B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Flow4.Machine.Tests", "Flow4.Machine.Tests\Flow4.Machine.Tests.csproj", "{42CD01E4-28FC-458A-816E-BD3AC3FC0BBF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +50,10 @@ Global
 		{A0E35549-178F-4EA1-B0DA-BDED57DBAA33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0E35549-178F-4EA1-B0DA-BDED57DBAA33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0E35549-178F-4EA1-B0DA-BDED57DBAA33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42CD01E4-28FC-458A-816E-BD3AC3FC0BBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42CD01E4-28FC-458A-816E-BD3AC3FC0BBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42CD01E4-28FC-458A-816E-BD3AC3FC0BBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42CD01E4-28FC-458A-816E-BD3AC3FC0BBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,5 +61,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{5AFB9F4D-B3B4-4022-8C13-D0382B00F0F8} = {5D0566B1-ADB8-4F27-A921-F361F222DA27}
 		{1A6F560E-2C39-493E-8041-AF82F3BEA330} = {5D0566B1-ADB8-4F27-A921-F361F222DA27}
+		{42CD01E4-28FC-458A-816E-BD3AC3FC0BBF} = {3FC3932F-BD67-4DA2-8BEE-7C84815BB75B}
 	EndGlobalSection
 EndGlobal
