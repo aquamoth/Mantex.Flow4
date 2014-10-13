@@ -16,20 +16,21 @@ namespace Flow4.Machine.Tests
         }
 
         [TestMethod]
-        public void Initializes_as_stopped()
+        public void FakeXray_Initializes_as_stopped()
         {
             Assert.AreEqual(Machine.State.Stopped, xray.State);
         }
 
         [TestMethod]
         [ExpectedException(typeof(AggregateException))]
-        public void Cant_be_stopped_when_not_running()
+        public void FakeXray_Cant_be_stopped_when_not_running()
         {
             xray.Stop().Wait();
         }
 
         [TestMethod]
-        public void Can_be_started_and_stopped()
+        [TestCategory("Slow")]
+        public void FakeXray_Can_be_started_and_stopped()
         {
             var task = xray.Start();
             Assert.AreEqual(State.Starting, xray.State);
@@ -43,7 +44,7 @@ namespace Flow4.Machine.Tests
 
         [TestMethod]
         [ExpectedException(typeof(AggregateException))]
-        public void Cant_be_started_when_running()
+        public void FakeXray_Cant_be_started_when_running()
         {
             var startTask = xray.Start();
             xray.Start().Wait();

@@ -40,13 +40,14 @@ namespace Flow4.Machine
 
         protected override async Task<bool> OnStop()
         {
+            var success = await base.OnStop();
+
             frameBuilderHighEnergy.Dispose();
             frameBuilderHighEnergy = null;
 
             frameBuilderLowEnergy.Dispose();
             frameBuilderLowEnergy = null;
 
-            var success = await base.Stop();
             return success;
         }
 
