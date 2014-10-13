@@ -3,6 +3,8 @@ using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Flow4.Framework;
+using Flow4.Entities;
+using System.Threading.Tasks;
 
 namespace Flow4.Machine.Tests
 {
@@ -10,10 +12,11 @@ namespace Flow4.Machine.Tests
     public class FakeDetectorTests
     {
         IDetector detector;
+        FeedFactory factory; 
 
         public FakeDetectorTests()
         {
-            var factory = new FeedFactory();
+            factory = new FeedFactory();
             detector = new Detector(factory);
         }
 
@@ -31,5 +34,22 @@ namespace Flow4.Machine.Tests
             detector.Stop().Wait();
             Assert.AreEqual(State.Stopped, detector.State);
         }
+
+        [TestMethod]
+        public void Detector_writes_frames_to_both_feeds()
+        {
+            var highFeed = factory.GetFeedOf<IFrame>("RawHighEnergyFrameFeed").Subscribe();
+            var lowFeed = factory.GetFeedOf<IFrame>("RawLowEnergyFrameFeed").Subscribe();
+
+            Assert.IsTrue(highFeed.IsEndOfFeed);
+            Assert.IsTrue(lowFeed.IsEndOfFeed);
+
+            detector.Start().Wait();
+            Task.Delay(2000).Wait();
+
+            Assert.IsFalse(highFeed.IsEndOfFeed);
+            Assert.IsFalse(lowFeed.IsEndOfFeed);
+        }
+
     }
 }

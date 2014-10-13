@@ -12,12 +12,12 @@ namespace Flow4.Framework
         where T : IRefCountedEntity
     {
         Feed<T> _feed;
-        internal int CurrentPosition { get; private set; }
+        internal int NextReadPosition { get; private set; }
 
         internal FeedOutputQueue(Feed<T> feed)
         {
             this._feed = feed;
-            this.CurrentPosition = -1;
+            this.NextReadPosition = 0;
         }
 
         public void Dispose()
@@ -31,17 +31,17 @@ namespace Flow4.Framework
             return this;
         }
 
-        public bool IsEndOfFeed { get { return this.CurrentPosition == _feed.WritePosition; } }
+        public bool IsEndOfFeed { get { return this.NextReadPosition == _feed.WritePosition; } }
 
         bool _itemRefCounted = false;
         bool IEnumerator.MoveNext()
         {
-            if (((this.CurrentPosition + 1) % _feed.MaxQueueSize) == _feed.WritePosition)
+            if (this.IsEndOfFeed)
                 return false;
 
-            this.CurrentPosition++;
-            if (this.CurrentPosition == _feed.MaxQueueSize)
-                this.CurrentPosition = 0;
+            this.NextReadPosition++;
+            if (this.NextReadPosition == _feed.MaxQueueSize)
+                this.NextReadPosition = 0;
 
             _itemRefCounted = false;
             return true;
@@ -56,17 +56,29 @@ namespace Flow4.Framework
         {
             get
             {
-                if (this.CurrentPosition == -1)
-                    throw new System.IO.EndOfStreamException("Beginning of stream. MoveNext first!");
-                if (IsEndOfFeed)
-                    throw new System.IO.EndOfStreamException();
+                var position = this.NextReadPosition - 1;
+                if (position == -1)
+                {
+                    if (_feed.IsBeginningOfFeed)
+                        throw new System.IO.EndOfStreamException("Beginning of stream. MoveNext first!");
+                    position = _feed.MaxQueueSize - 1;
+                }
+                else if (position == 0)
+                {
+                    if (_feed.IsBeginningOfFeed)
+                        throw new System.IO.EndOfStreamException("Beginning of stream. MoveNext first!");
+                }
+                else if (position == _feed.MaxQueueSize)
+                {
+                    position = 0;
+                }
 
                 if (!_itemRefCounted)
                 {
-                    _feed._queue[this.CurrentPosition].IncreaseRefCounter();
+                    _feed._queue[position].IncreaseRefCounter();
                     _itemRefCounted = true;
                 }
-                return _feed._queue[this.CurrentPosition];
+                return _feed._queue[position];
             }
         }
 
@@ -79,9 +91,9 @@ namespace Flow4.Framework
 
         void IEnumerator.Reset()
         {
-            this.CurrentPosition = _feed.WritePosition;
+            this.NextReadPosition = _feed.WritePosition;
         }
 
-        public int Count { get { return _feed.WritePosition >= this.CurrentPosition ? _feed.WritePosition - this.CurrentPosition : _feed.MaxQueueSize - this.CurrentPosition + _feed.WritePosition; } }
+        public int Count { get { return _feed.WritePosition >= this.NextReadPosition ? _feed.WritePosition - this.NextReadPosition : _feed.MaxQueueSize - this.NextReadPosition + _feed.WritePosition; } }
     }
 }

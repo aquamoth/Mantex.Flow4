@@ -13,9 +13,10 @@ namespace Flow4.Framework
         where T : IRefCountedEntity
     {
         object _lockObject = new object();
+        bool isDisposed = false;
         internal T[] _queue;
         HashSet<FeedOutputQueue<T>> _outputQueues;
-        bool isDisposed = false;
+        internal bool IsBeginningOfFeed;
 
         public string Name { get; private set; }
         public int MaxQueueSize { get; private set; }
@@ -28,6 +29,7 @@ namespace Flow4.Framework
             this.MaxQueueSize = capacity;
 
             this.WritePosition = 0;
+            this.IsBeginningOfFeed = true;
             
             _queue = new T[MaxQueueSize];
             _outputQueues = new HashSet<FeedOutputQueue<T>>();
@@ -78,6 +80,8 @@ namespace Flow4.Framework
                     nextPosition = 0;
                 
                 WritePosition = nextPosition;
+                IsBeginningOfFeed = false;
+
                 verifyQueueNotOverflowed();
                 item.IncreaseRefCounter();
             }
@@ -93,7 +97,7 @@ namespace Flow4.Framework
         {
             lock (_lockObject)
             {
-                var readPositions = _outputQueues.Select(q => q.CurrentPosition);
+                var readPositions = _outputQueues.Select(q => q.NextReadPosition);
 
                 //Clear array after write cursor to last read cursor or end or array
                 var lastIndex = readPositions
@@ -130,7 +134,7 @@ namespace Flow4.Framework
 
         private void verifyQueueNotOverflowed()
         {
-            if (_outputQueues.Any(p => p.CurrentPosition == WritePosition))
+            if (_outputQueues.Any(p => p.NextReadPosition == WritePosition))
             {
                 throw new StackOverflowException(string.Format("Feed '{0}' overflowed.", Name));
             }
