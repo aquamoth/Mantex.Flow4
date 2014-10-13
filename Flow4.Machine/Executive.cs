@@ -8,45 +8,55 @@ using System.Threading.Tasks;
 
 namespace Flow4.Machine
 {
-    public class Executive : BaseController, IExecutive
+    public class Executive : BaseMachineController, IExecutive
     {
         IScanner scanner;
         IMarshaller marshaller;
 
-        public Executive(IScanner scanner, IMarshaller marshaller /*, HashSet<object> resources*/)
+        public Executive(IScanner scanner, IMarshaller marshaller)
             : base(0)
         {
-            //HashSet<object> resources = new HashSet<object>();
-            this.scanner = scanner;// new Scanner(resources);
-            this.marshaller = marshaller;// new Marshaller(resources);
+            this.scanner = scanner;
+            this.marshaller = marshaller;
         }
 
-        //void IDisposable.Dispose()
-        //{
-        //    Dispose(true);
-        //    GC.SuppressFinalize(this);
-        //}
-
-        public override void Start()
+        protected override async Task<bool> OnStart()
         {
-            base.Start();
-            marshaller.Start();
-            scanner.Start();
+            var success = await marshaller.Start();
+            if (!success)
+                return false;
+            success = await scanner.Start();
+            if (!success)
+            {
+                await marshaller.Stop();
+                return false;
+            }
+            success = await base.OnStart();
+            if (!success)
+            {
+                await scanner.Stop();
+                await marshaller.Stop();
+                return false;
+            }
+            return true;
         }
 
-        public override void Stop()
+        protected override async Task<bool> OnStop()
         {
-            scanner.Stop();
-            marshaller.Stop();
-            base.Stop();
+            var success = await scanner.Stop();
+            success &= await marshaller.Stop();
+            success &= await base.Stop();
+            return success;
         }
 
         protected override void Dispose(bool disposing)
         {
-            if(disposing)
+            if (disposing)
             {
-                marshaller.Dispose();
-                scanner.Dispose();
+                if (marshaller is IDisposable)
+                    (marshaller as IDisposable).Dispose();
+                if (scanner is IDisposable)
+                    (scanner as IDisposable).Dispose();
             }
             base.Dispose(disposing);
         }

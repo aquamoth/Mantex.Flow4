@@ -3,7 +3,7 @@ using System;
 
 namespace Flow4.Machine
 {
-    public interface IScanner : IController
+    public interface IScanner : IMachineController
     {
     }
 }

@@ -3,7 +3,7 @@ using System;
 
 namespace Flow4.Machine
 {
-    public interface IMarshaller : IController
+    public interface IMarshaller : IMachineController
     {
     }
 }

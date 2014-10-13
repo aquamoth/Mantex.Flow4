@@ -11,8 +11,7 @@ using System.Threading.Tasks;
 
 namespace Flow4.Machine
 {
-
-    public class Marshaller : BaseController, IMarshaller
+    public class Marshaller : BaseMachineController, IMarshaller
     {
         object _lockObject = new object();
         FeedOutputQueue<IFrame> _highEnergyFrameFeedQueue;
@@ -48,9 +47,9 @@ namespace Flow4.Machine
             base.Dispose(disposing);
         }
 
-        protected override void OnHeartbeat(object state)
+        protected override void OnHeartbeat()
         {
-            base.OnHeartbeat(state);
+            base.OnHeartbeat();
 
             lock(_lockObject)
             {

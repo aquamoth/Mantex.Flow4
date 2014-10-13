@@ -2,59 +2,49 @@
 using Flow4.Framework;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Flow4.Machine
 {
-    public class Scanner : BaseController, IScanner
+    public class Scanner : BaseMachineController, IScanner
     {
-        //object _lockObject = new object();
-        //FrameBuilder frameBuilder = null;
-
-        //Xray xray;
-        //Detector detector;
-
-        //readonly HashSet<object> _resources;
-
-        public Scanner(/*HashSet<object> resources*/) 
+        public Scanner() 
             : base(100)
         {
-            //this._resources = resources;
             ScanlinePool.Instance.NumberOfPixels = 1024;
         }
 
         public IDetector Detector { get; set; }
         public IXray Xray { get; set; }
 
-        public override void Start()
+        public override async Task<bool> Start()
         {
-            //xray = new Xray();
-            //detector = new Detector(_resources);
-
-            Xray.Start();
-            Detector.Start();
-
-            //frameBuilder = new FrameBuilder();
-            base.Start();
+            var success = await Xray.Start();
+            if (!success)
+                return false;
+            success = await Detector.Start();
+            if (!success)
+            {
+                await Xray.Stop();
+                return false;
+            }
+            success = await base.Start();
+            if (!success)
+            {
+                await Detector.Stop();
+                await Xray.Stop();
+                return false;
+            }
+            return true;
         }
 
-        public override void Stop()
+        public override async Task<bool> Stop()
         {
-            base.Stop();
-            Detector.Stop();
-            Xray.Stop();
+            var success = await base.Stop();
+            success &= await Detector.Stop();
+            success &= await Xray.Stop();
+            return success;
         }
-
-        //public void Run(IWorkOrder order)
-        //{
-
-        //}
-
-        //public override void Stop()
-        //{
-        //    base.Stop();
-        //    frameBuilder.Dispose();
-        //    frameBuilder = null;
-        //}
 
         //protected override void OnHeartbeat(object state)
         //{
