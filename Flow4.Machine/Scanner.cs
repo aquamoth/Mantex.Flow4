@@ -17,32 +17,21 @@ namespace Flow4.Machine
         public IDetector Detector { get; set; }
         public IXray Xray { get; set; }
 
-        public override async Task<bool> Start()
+        protected override async Task<bool> OnStart()
         {
-            var success = await Xray.Start();
-            if (!success)
-                return false;
-            success = await Detector.Start();
-            if (!success)
-            {
-                await Xray.Stop();
-                return false;
-            }
-            success = await base.Start();
-            if (!success)
-            {
-                await Detector.Stop();
-                await Xray.Stop();
-                return false;
-            }
-            return true;
+            this.MonitoredControllers.Add(Xray);
+            this.MonitoredControllers.Add(Detector);
+
+            return await base.OnStart();
         }
 
-        public override async Task<bool> Stop()
+        protected override async Task<bool> OnStop()
         {
-            var success = await base.Stop();
-            success &= await Detector.Stop();
-            success &= await Xray.Stop();
+            var success = await base.OnStop();
+
+            this.MonitoredControllers.Remove(Xray);
+            this.MonitoredControllers.Remove(Detector);
+            
             return success;
         }
 

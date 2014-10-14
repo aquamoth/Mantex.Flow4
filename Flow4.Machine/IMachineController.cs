@@ -10,6 +10,9 @@ namespace Flow4.Machine
     public interface IMachineController
     {
         State State { get; }
+
+        event EventHandler StateChanged;
+
         Task<bool> Start();
         Task<bool> Stop();
     }

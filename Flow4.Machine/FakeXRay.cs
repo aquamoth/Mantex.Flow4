@@ -9,14 +9,19 @@ namespace Flow4.Machine
 {
     public class FakeXRay : BaseMachineController, IXray
     {
-        public FakeXRay()
+        readonly int _startupTime;
+        readonly int _shutdownTime;
+
+        public FakeXRay(int startupTime = 5000, int shutdownTime = 1000)
             : base(1000)
         {
+            this._startupTime = startupTime;
+            this._shutdownTime = shutdownTime;
         }
 
         protected override async Task<bool> OnStart()
         {
-            await Task.Delay(5000);
+            await Task.Delay(_startupTime);
             //await base.OnStart();
             return true;
         }
@@ -24,7 +29,7 @@ namespace Flow4.Machine
         protected override async Task<bool> OnStop()
         {
             //await base.OnStop();
-            await Task.Delay(1000);
+            await Task.Delay(_shutdownTime);
             return true;
         }
     }

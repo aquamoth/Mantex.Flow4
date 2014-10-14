@@ -12,7 +12,7 @@ namespace Flow4.Machine.Tests
 
         public FakeXrayTests()
         {
-            xray = new FakeXRay();
+            xray = new FakeXRay(100, 100);
         }
 
         [TestMethod]
@@ -22,10 +22,15 @@ namespace Flow4.Machine.Tests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(AggregateException))]
         public void FakeXray_Cant_be_stopped_when_not_running()
         {
+            var stateChangedCalled = false;
+            xray.StateChanged += (sender, e) =>
+            {
+                stateChangedCalled = true;
+            };
             xray.Stop().Wait();
+            Assert.AreNotEqual(true, stateChangedCalled);
         }
 
         [TestMethod]

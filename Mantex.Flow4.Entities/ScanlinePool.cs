@@ -44,8 +44,11 @@ namespace Flow4.Entities
             }
             set
             {
-                System.Diagnostics.Trace.Assert(freeObjects.Count == 0);
-                _numberOfPixels = value;
+                if (_numberOfPixels != value)
+                {
+                    System.Diagnostics.Trace.Assert(freeObjects.Count == 0);
+                    _numberOfPixels = value;
+                }
             }
         }
 
