@@ -22,8 +22,11 @@ namespace Flow4.Framework
 
         public void Dispose()
         {
-            this._feed.Unsubscribe(this);
-            this._feed = null;
+            if (this._feed != null)
+            {
+                this._feed.Unsubscribe(this);
+                this._feed = null;
+            }
         }
 
         IEnumerator<T> IEnumerable<T>.GetEnumerator()

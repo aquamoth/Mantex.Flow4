@@ -1,6 +1,7 @@
 ﻿using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Castle.Windsor.Installer;
 using Flow4.Machine;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,12 @@ namespace Flow4.Sample.Castle.Windsor
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(
-                Component.For<IXray>()
-                    .ImplementedBy<FakeXRay>()
-                    .LifestyleTransient()
-                );
+            container.Install(Configuration.FromAppConfig());
+            //container.Register(
+            //    Component.For<IXray>()
+            //        .ImplementedBy<FakeXRay>()
+            //        .LifestyleTransient()
+            //    );
 
             container.Register(
                 Classes.FromAssemblyContaining<Executive>()
