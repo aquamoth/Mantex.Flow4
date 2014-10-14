@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Flow4.Machine
 {
-    public abstract class BaseMachineController : IMachineController
+    public abstract class BaseMachineController : IMachineController, IDisposable
     {
         readonly uint _heartbeatInterval;
         Timer heartbeat = null;
@@ -152,6 +152,9 @@ namespace Flow4.Machine
             {
                 if (State == Machine.State.Running)
                     Stop().Wait();
+
+                foreach (var controller in MonitoredControllers.OfType<IDisposable>())
+                    controller.Dispose();
             }
         }
 

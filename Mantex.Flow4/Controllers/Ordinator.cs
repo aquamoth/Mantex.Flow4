@@ -21,12 +21,12 @@ namespace Flow4.Sample.Controllers
 
         public void Start()
         {
-            executive.Start();
+            executive.Start().Wait();
         }
 
         public void Stop()
         {
-            executive.Stop();
+            executive.Stop().Wait();
         }
 
         void IDisposable.Dispose()

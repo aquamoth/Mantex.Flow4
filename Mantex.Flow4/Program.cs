@@ -26,6 +26,9 @@ namespace Flow4.Sample
             Console.ReadLine();
 
             ordinator.Stop();
+            if (ordinator is IDisposable)
+                (ordinator as IDisposable).Dispose();
+
             container.Dispose();
         }
     }

@@ -19,6 +19,11 @@ namespace Flow4.Machine
 
         protected override async Task<bool> OnStart()
         {
+            if (Xray == null)
+                throw new ApplicationException("Xray not defined.");
+            if (Detector == null)
+                throw new ApplicationException("Detector not defined.");
+
             this.MonitoredControllers.Add(Xray);
             this.MonitoredControllers.Add(Detector);
 

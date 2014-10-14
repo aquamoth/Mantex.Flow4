@@ -15,6 +15,12 @@ namespace Flow4.Sample.Castle.Windsor
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
             container.Register(
+                Component.For<IXray>()
+                    .ImplementedBy<FakeXRay>()
+                    .LifestyleTransient()
+                );
+
+            container.Register(
                 Classes.FromAssemblyContaining<Executive>()
                     .Where(Component.IsInSameNamespaceAs<Executive>())
                     .WithService
