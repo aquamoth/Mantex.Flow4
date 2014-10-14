@@ -42,7 +42,7 @@ namespace Flow4.Machine
 
         #endregion Machine State
 
-        public ICollection<IMachineController> MonitoredControllers { get; protected set; }
+        protected ICollection<IMachineController> MonitoredControllers { get; set; }
 
         public BaseMachineController(uint heartbeatInterval)
         {

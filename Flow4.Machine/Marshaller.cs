@@ -17,26 +17,18 @@ namespace Flow4.Machine
         FeedOutputQueue<IFrame> _highEnergyFrameFeedQueue;
         FeedOutputQueue<IFrame> _lowEnergyFrameFeedQueue;
 
-        public Marshaller(IFeedFactory feedFactory/*HashSet<object> resources*/)
+        public int HighFeedRetrieveCounter { get; private set; }
+        public int LowFeedRetrieveCounter { get; private set; }
+
+        public Marshaller(IFeedFactory feedFactory)
             : base(1000)
         {
-            //var feedFactory = kernel.Resolve<IFeedFactory>();
             var highEnergyFrameFeed = feedFactory.GetFeedOf<IFrame>("RawHighEnergyFrameFeed");
             _highEnergyFrameFeedQueue = highEnergyFrameFeed.Subscribe();
 
             var lowEnergyFrameFeed = feedFactory.GetFeedOf<IFrame>("RawLowEnergyFrameFeed");
             _lowEnergyFrameFeedQueue = lowEnergyFrameFeed.Subscribe();
             
-            //var frameFeedResources = resources.OfType<Feed<IFrame>>();
-            
-            //_highEnergyFrameFeedQueue = frameFeedResources
-            //    .Single(feed => feed.Name == "Raw High Energy Frame")
-            //    .Subscribe();
-
-            //_lowEnergyFrameFeedQueue = frameFeedResources
-            //    .Single(feed => feed.Name == "Raw Low Energy Frame")
-            //    .Subscribe();
-
             Trace.TraceInformation("Marshaller initialized ({0} ,{1}).", _highEnergyFrameFeedQueue.Count, _lowEnergyFrameFeedQueue.Count);
         }
 
@@ -58,12 +50,14 @@ namespace Flow4.Machine
                 {
                     Trace.TraceInformation("Read high energy frame {0}.", frame.Id);
                     frame.Dispose();
+                    HighFeedRetrieveCounter++;
                 }
 
                 foreach (var frame in _lowEnergyFrameFeedQueue)
                 {
                     Trace.TraceInformation("Read low energy frame {0}.", frame.Id);
                     frame.Dispose();
+                    LowFeedRetrieveCounter++;
                 }
             }
         }
