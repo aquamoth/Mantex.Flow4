@@ -48,7 +48,9 @@
     <Compile Include="Base\BaseRefCountedEntity.cs" />
     <Compile Include="Base\Builder.cs" />
     <Compile Include="Base\IEntity.cs" />
+    <Compile Include="ConveyerPositionBuilder.cs" />
     <Compile Include="FrameBuilder.cs" />
+    <Compile Include="IConveyerPosition.cs" />
     <Compile Include="IFrame.cs" />
     <Compile Include="IScanline.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
