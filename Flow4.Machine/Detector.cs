@@ -1,6 +1,6 @@
 ﻿using Flow4.Entities;
 using Flow4.Framework;
-using Flow4.Sample.Controllers;
+using Flow4.IMachine;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -62,8 +62,6 @@ namespace Flow4.Machine
             var scanLinesHighEnergy = readScanlineFromHardware();
             var scanLinesLowEnergy = readScanlineFromHardware();
 
-            //Task.Run(() =>
-            //{
             var committedFramesHighEnergy = new Queue<IFrame>();
             var committedFramesLowEnergy = new Queue<IFrame>();
             lock (_lockObject)
@@ -75,18 +73,13 @@ namespace Flow4.Machine
                 {
                     frameFeedHighEnergy.Enqueue(frame);
                     frame.Dispose();
-                    //Trace.TraceInformation("Wrote frame {0}", frame.Id);
-                    //OnFrameCreated(new FrameCreatedEventArgs { Frame = frame });
                 }
                 foreach (var frame in committedFramesLowEnergy)
                 {
                     frameFeedLowEnergy.Enqueue(frame);
                     frame.Dispose();
-                    //Trace.TraceInformation("Wrote frame {0}", frame.Id);
-                    //OnFrameCreated(new FrameCreatedEventArgs { Frame = frame });
                 }
             }
-            //});
         }
 
         private void appendScanlinesToFrameBuilder(IEnumerable<IScanline> scanLines, Queue<IFrame> queueOfCommittedFrames, ref FrameBuilder frameBuilder)
@@ -102,15 +95,9 @@ namespace Flow4.Machine
             }
         }
 
-        //int DEBUG_READ_COUNTER = 8;
         Random _rnd = new Random();
         private IEnumerable<IScanline> readScanlineFromHardware()
         {
-
-            //if (DEBUG_READ_COUNTER <= 0)
-            //    yield break;
-            //DEBUG_READ_COUNTER--;
-
             var numberOfNewScanlinesInHardwareBuffer = _rnd.Next(480, 520);
             var builders = ScanlinePool.Instance.Take(numberOfNewScanlinesInHardwareBuffer);
             foreach (var scanLine in builders)

@@ -1,6 +1,6 @@
 ﻿using Flow4.Entities;
 using Flow4.Framework;
-using Flow4.Machine;
+using Flow4.IMachine;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flow4.Sample.Controllers
+namespace Flow4.Ordinator
 {
     public class Ordinator : IOrdinator, IDisposable
     {
@@ -17,6 +17,7 @@ namespace Flow4.Sample.Controllers
         public Ordinator(IExecutive executive)
         {
             this.executive = executive;
+            //TODO: Add references to Analysis, Monitors and Assessor
         }
 
         public void Start()

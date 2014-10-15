@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Flow4.IMachine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,7 @@ namespace Flow4.Machine.Tests.Mocks
         {
             base.OnHeartbeat();
             if (DateTime.Now >= startTime.AddSeconds(1))
-                this.State = Machine.State.Failure;
+                this.State = State.Failure;
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flow4.Machine
+namespace Flow4.IMachine
 {
     public enum State
     {

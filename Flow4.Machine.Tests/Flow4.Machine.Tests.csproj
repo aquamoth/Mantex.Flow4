@@ -63,6 +63,10 @@
       <Project>{1a6f560e-2c39-493e-8041-af82f3bea330}</Project>
       <Name>Flow4.Framework</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Flow4.IMachine\Flow4.IMachine.csproj">
+      <Project>{f0676df1-20b6-4fe9-95dc-dcd70a0bf387}</Project>
+      <Name>Flow4.IMachine</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Flow4.Machine\Flow4.Machine.csproj">
       <Project>{4fcd3b2b-156e-485a-abe3-84c137dad74e}</Project>
       <Name>Flow4.Machine</Name>

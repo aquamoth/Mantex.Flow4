@@ -1,4 +1,5 @@
 ﻿using Flow4.Framework;
+using Flow4.IMachine;
 using System;
 using System.Collections.Generic;
 using System.Linq;

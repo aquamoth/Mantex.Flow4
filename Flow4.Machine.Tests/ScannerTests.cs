@@ -1,10 +1,11 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Flow4.Entities;
 using Flow4.Framework;
-using Flow4.Entities;
+using Flow4.IMachine;
+using Flow4.Machine.Tests.Mocks;
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 using System.Threading;
-using Flow4.Machine.Tests.Mocks;
 
 namespace Flow4.Machine.Tests
 {

@@ -1,14 +1,14 @@
 ﻿using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using Flow4.Sample.Controllers;
+using Flow4.Ordinator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flow4.Sample.Castle.Windsor
+namespace Flow4.Ordinator.Castle.Windsor
 {
     public class OrdinatorInstaller : IWindsorInstaller
     {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Flow4.IMachine;
+using System;
 using System.Text;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,7 +19,7 @@ namespace Flow4.Machine.Tests
         [TestMethod]
         public void FakeXray_Initializes_as_stopped()
         {
-            Assert.AreEqual(Machine.State.Stopped, xray.State);
+            Assert.AreEqual(State.Stopped, xray.State);
         }
 
         [TestMethod]

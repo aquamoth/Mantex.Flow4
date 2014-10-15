@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4FCD3B2B-156E-485A-ABE3-84C137DAD74E}</ProjectGuid>
+    <ProjectGuid>{F0676DF1-20B6-4FE9-95DC-DCD70A0BF387}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Flow4.Machine</RootNamespace>
-    <AssemblyName>Flow4.Machine</AssemblyName>
+    <RootNamespace>Flow4.IMachine</RootNamespace>
+    <AssemblyName>Flow4.IMachine</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,23 +39,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseMachineController.cs" />
-    <Compile Include="Conveyer.cs" />
-    <Compile Include="Detector.cs" />
-    <Compile Include="Executive.cs" />
-    <Compile Include="Marshaller.cs" />
+    <Compile Include="IConveyer.cs" />
+    <Compile Include="IDetector.cs" />
+    <Compile Include="IExecutive.cs" />
+    <Compile Include="IMachineController.cs" />
+    <Compile Include="IMarshaller.cs" />
+    <Compile Include="IScanner.cs" />
+    <Compile Include="IXray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scanner.cs" />
-    <Compile Include="FakeXRay.cs" />
+    <Compile Include="State.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Flow4.Framework\Flow4.Framework.csproj">
       <Project>{1a6f560e-2c39-493e-8041-af82f3bea330}</Project>
       <Name>Flow4.Framework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Flow4.IMachine\Flow4.IMachine.csproj">
-      <Project>{f0676df1-20b6-4fe9-95dc-dcd70a0bf387}</Project>
-      <Name>Flow4.IMachine</Name>
     </ProjectReference>
     <ProjectReference Include="..\Mantex.Flow4.Entities\Flow4.Entitites.csproj">
       <Project>{5afb9f4d-b3b4-4022-8c13-d0382b00f0f8}</Project>

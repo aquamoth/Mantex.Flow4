@@ -1,5 +1,6 @@
 ﻿using System;
-namespace Flow4.Sample.Controllers
+
+namespace Flow4.Ordinator
 {
     interface IOrdinator
     {

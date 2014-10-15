@@ -1,5 +1,6 @@
 ﻿using Flow4.Entities;
 using Flow4.Framework;
+using Flow4.IMachine;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -39,56 +40,5 @@ namespace Flow4.Machine
             
             return success;
         }
-
-        //protected override void OnHeartbeat(object state)
-        //{
-        //    processNewScanlines();
-        //    base.OnHeartbeat(state);
-        //}
-
-        //private void processNewScanlines()
-        //{
-        //    var scanLines = readScanlineFromHardware();
-        //    //Task.Run(() =>
-        //    //{
-        //        var committedFrames = new Queue<IFrame>();
-        //        lock (_lockObject)
-        //        {
-        //            foreach (var scanLine in scanLines)
-        //            {
-        //                frameBuilder.Lines.Add(scanLine);
-        //                if (frameBuilder.Lines.Count == 100)
-        //                {
-        //                    committedFrames.Enqueue(frameBuilder.Commit());
-        //                    frameBuilder = new FrameBuilder();
-        //                }
-        //            }
-        //        }
-        //        foreach (var frame in committedFrames)
-        //        {
-        //            OnFrameCreated(new FrameCreatedEventArgs { Frame = frame });
-        //        }
-        //    //});
-        //}
-
-        //Random _rnd = new Random();
-        //private IEnumerable<IScanline> readScanlineFromHardware()
-        //{
-        //    var numberOfNewScanlinesInHardwareBuffer = _rnd.Next(9, 12);
-        //    var builders = ScanlinePool.Instance.Take(numberOfNewScanlinesInHardwareBuffer);
-        //    foreach(var scanLine in builders)
-        //    {
-        //        _rnd.NextBytes(scanLine.Pixels);
-        //        yield return scanLine.Commit();
-        //    }
-        //}
-
-        //public event EventHandler<FrameCreatedEventArgs> FrameCreated;
-        //protected void OnFrameCreated(FrameCreatedEventArgs e)
-        //{
-        //    Trace.TraceInformation("Created frame {0}", e.Frame.Id);
-        //    if (FrameCreated != null)
-        //        FrameCreated(this, e);
-        //}
     }
 }

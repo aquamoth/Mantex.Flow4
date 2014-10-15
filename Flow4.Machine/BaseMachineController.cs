@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Flow4.IMachine;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -47,20 +48,20 @@ namespace Flow4.Machine
         public BaseMachineController(uint heartbeatInterval)
         {
             this._heartbeatInterval = heartbeatInterval;
-            this.State = Machine.State.Stopped;
+            this.State = State.Stopped;
             MonitoredControllers = createMonitoredCollection();
         }
 
         public virtual async Task<bool> Start()
         {
-            if (State != Machine.State.Stopped)
+            if (State != State.Stopped)
                 throw new NotSupportedException("Only stopped machine controllers can be started.");
             
-            this.State = Machine.State.Starting;
+            this.State = State.Starting;
             var success = await OnStart();
             if (success)
             {
-                this.State = Machine.State.Running;
+                this.State = State.Running;
             }
 
             return success;
@@ -76,17 +77,17 @@ namespace Flow4.Machine
                     throw new NotSupportedException("Not yet supporting stopping a Starting controller.");
 
                 case State.Running:
-                    this.State = Machine.State.Stopping;
+                    this.State = State.Stopping;
                     var success = await OnStop();
                     if (success)
                     {
-                        this.State = Machine.State.Stopped;
+                        this.State = State.Stopped;
                     }
                     return success;
 
                 case State.Stopping:
                     Task.Delay(5000).Wait();//TODO: Rewrite better, so we only wait for the state to change
-                    return this.State == Machine.State.Stopped;
+                    return this.State == State.Stopped;
 
                 case State.Failure: return true;
 
@@ -150,7 +151,7 @@ namespace Flow4.Machine
         {
             if (disposing)
             {
-                if (State == Machine.State.Running)
+                if (State == State.Running)
                     Stop().Wait();
 
                 foreach (var controller in MonitoredControllers.OfType<IDisposable>())
@@ -162,7 +163,7 @@ namespace Flow4.Machine
 
         #region Monitored Controllers
         
-        protected virtual bool OnVerifyStateMonitoredControllers(Machine.State state)
+        protected virtual bool OnVerifyStateMonitoredControllers(State state)
         {
             return MonitoredControllers.All(c => c.State == state);
         }
@@ -181,10 +182,10 @@ namespace Flow4.Machine
 
         void monitoredController_StateChanged(object sender, EventArgs e)
         {
-            if ((sender as IMachineController).State == Machine.State.Failure)
+            if ((sender as IMachineController).State == State.Failure)
             {
                 Trace.TraceError("Detected failure of a monitored machine controller!");
-                this.State = Machine.State.Failure;
+                this.State = State.Failure;
 
                 Task.WhenAll(MonitoredControllers.Select(c => c.Stop())).Wait();
             }

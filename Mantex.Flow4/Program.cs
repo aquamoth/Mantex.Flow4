@@ -1,7 +1,6 @@
 ﻿using Castle.Facilities.TypedFactory;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
-using Flow4.Sample.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Flow4.Sample
+namespace Flow4.Ordinator
 {
     class Program
     {
