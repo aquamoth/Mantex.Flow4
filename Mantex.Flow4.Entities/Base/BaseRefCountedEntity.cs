@@ -8,7 +8,7 @@ namespace Flow4.Entities.Base
 {
     public abstract class BaseRefCountedEntity : BaseEntity, IRefCountedEntity
     {
-        int _referenceCounter = 1;
+        protected int ReferenceCounter = 1;
 
         ~BaseRefCountedEntity()
         {
@@ -17,7 +17,7 @@ namespace Flow4.Entities.Base
 
         public void Dispose()
         {
-            if (--_referenceCounter == 0)
+            if (--ReferenceCounter == 0)
             {
                 Dispose(true);
             }
@@ -27,6 +27,6 @@ namespace Flow4.Entities.Base
         {
         }
 
-        public void IncreaseRefCounter() { _referenceCounter++; }
+        public void IncreaseRefCounter() { ReferenceCounter++; }
     }
 }

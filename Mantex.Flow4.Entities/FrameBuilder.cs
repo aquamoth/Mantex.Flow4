@@ -8,46 +8,30 @@ using System.Threading.Tasks;
 
 namespace Flow4.Entities
 {
-//TODO: Base on BaseRefCountedEntity instead of "stupid" Builder<>
-    public class FrameBuilder : Builder<IFrame>, IFrame, IDisposable
+    public class FrameBuilder : BaseRefCountedEntity, IBuilder<IFrame>, IFrame
     {
-        int _referenceCounter = 1;
-
         public ICollection<IScanline> Lines { get; private set; }
 
-        public FrameBuilder() 
+        public FrameBuilder()
             : base()
         {
             Lines = new List<IScanline>();
-            //System.Diagnostics.Trace.TraceInformation("FrameBuilder created for {0}", Id);
-        }
-
-        ~FrameBuilder()
-        {
-            System.Diagnostics.Trace.TraceWarning("FrameBuilder finalizer for {0}", Id);
-            Dispose(false);
         }
 
         IEnumerable<IScanline> IFrame.Lines { get { return Lines.AsEnumerable(); } }
 
-        public override IFrame Commit() 
+        public IFrame Commit()
         {
             Lines = Lines.ToArray();
-            return base.Commit();
+            return this as IFrame;
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            //System.Diagnostics.Trace.TraceInformation("FrameBuilder Dispose for {0}", Id);
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        void Dispose(bool disposing)
-        {
+            base.Dispose(disposing);
             if (disposing)
             {
-                if (--_referenceCounter == 0)
+                if (this.ReferenceCounter == 0)
                 {
                     foreach (var scanline in Lines)
                     {
@@ -58,7 +42,5 @@ namespace Flow4.Entities
                 }
             }
         }
-
-        public void IncreaseRefCounter() { _referenceCounter++; }
     }
 }
