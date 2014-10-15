@@ -52,8 +52,7 @@ namespace Flow4.Entities
             }
         }
 
-#warning "PerformanceIntex needs to be redesigned"
-        public Tuple<int, int> PerformanceIndex { get { return new Tuple<int, int>(freeObjects.Count, 0); } }//allocatedObjects.Count
+        public int FreeObjectsCounter { get { return freeObjects.Count; } }
 
         private ScanlinePool()
         {

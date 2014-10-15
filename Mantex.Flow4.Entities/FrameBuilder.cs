@@ -54,7 +54,7 @@ namespace Flow4.Entities
                         scanline.Dispose();
                     }
                     Lines = null;
-                    Trace.TraceInformation("AFTER Disposing: {0} allocated and {1} free objects.", ScanlinePool.Instance.PerformanceIndex.Item2, ScanlinePool.Instance.PerformanceIndex.Item1);
+                    Trace.TraceInformation("AFTER Disposing: {0} free objects.", ScanlinePool.Instance.FreeObjectsCounter);
                 }
             }
         }
