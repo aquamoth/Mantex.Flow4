@@ -57,6 +57,7 @@
     <Compile Include="Mocks\FailingDetector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScannerTests.cs" />
+    <Compile Include="ConveyerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Flow4.Framework\Flow4.Framework.csproj">

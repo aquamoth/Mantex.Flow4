@@ -1,4 +1,5 @@
 ﻿using Flow4.Entities;
+using Flow4.Entities.Base;
 using Flow4.Framework;
 using Flow4.IMachine;
 using System;
@@ -16,23 +17,26 @@ namespace Flow4.Machine
 
         object _lockObject = new object();
 
-        IFeed<IFrame> frameFeedHighEnergy;
-        IFeed<IFrame> frameFeedLowEnergy;
+        IFeed<IFrame> _frameFeedHighEnergy;
+        IFeed<IFrame> _frameFeedLowEnergy;
 
-        FrameBuilder frameBuilderHighEnergy = null;
-        FrameBuilder frameBuilderLowEnergy = null;
+        FrameBuilder _frameBuilderHighEnergy = null;
+        FrameBuilder _frameBuilderLowEnergy = null;
 
-        public Detector(IFeedFactory feedFactory)
+        IPool<ScanlineBuilder> _scanLinePool;
+
+        public Detector(IFeedFactory feedFactory, IScanlinePool scanlinePool)
             : base(500)
         {
-            frameFeedHighEnergy = feedFactory.GetFeedOf<IFrame>("RawHighEnergyFrameFeed");
-            frameFeedLowEnergy = feedFactory.GetFeedOf<IFrame>("RawLowEnergyFrameFeed");
+            this._frameFeedHighEnergy = feedFactory.GetFeedOf<IFrame>("RawHighEnergyFrameFeed");
+            this._frameFeedLowEnergy = feedFactory.GetFeedOf<IFrame>("RawLowEnergyFrameFeed");
+            this._scanLinePool = scanlinePool;
         }
 
         protected override async Task<bool> OnStart()
         {
-            frameBuilderHighEnergy = new FrameBuilder();
-            frameBuilderLowEnergy = new FrameBuilder();
+            _frameBuilderHighEnergy = new FrameBuilder();
+            _frameBuilderLowEnergy = new FrameBuilder();
 
             var success = await base.OnStart();
             return success;
@@ -42,11 +46,11 @@ namespace Flow4.Machine
         {
             var success = await base.OnStop();
 
-            frameBuilderHighEnergy.Dispose();
-            frameBuilderHighEnergy = null;
+            _frameBuilderHighEnergy.Dispose();
+            _frameBuilderHighEnergy = null;
 
-            frameBuilderLowEnergy.Dispose();
-            frameBuilderLowEnergy = null;
+            _frameBuilderLowEnergy.Dispose();
+            _frameBuilderLowEnergy = null;
 
             return success;
         }
@@ -66,17 +70,17 @@ namespace Flow4.Machine
             var committedFramesLowEnergy = new Queue<IFrame>();
             lock (_lockObject)
             {
-                appendScanlinesToFrameBuilder(scanLinesHighEnergy, committedFramesHighEnergy, ref frameBuilderHighEnergy);
-                appendScanlinesToFrameBuilder(scanLinesLowEnergy, committedFramesLowEnergy, ref frameBuilderLowEnergy);
+                appendScanlinesToFrameBuilder(scanLinesHighEnergy, committedFramesHighEnergy, ref _frameBuilderHighEnergy);
+                appendScanlinesToFrameBuilder(scanLinesLowEnergy, committedFramesLowEnergy, ref _frameBuilderLowEnergy);
 
                 foreach (var frame in committedFramesHighEnergy)
                 {
-                    frameFeedHighEnergy.Enqueue(frame);
+                    _frameFeedHighEnergy.Enqueue(frame);
                     frame.Dispose();
                 }
                 foreach (var frame in committedFramesLowEnergy)
                 {
-                    frameFeedLowEnergy.Enqueue(frame);
+                    _frameFeedLowEnergy.Enqueue(frame);
                     frame.Dispose();
                 }
             }
@@ -99,7 +103,7 @@ namespace Flow4.Machine
         private IEnumerable<IScanline> readScanlineFromHardware()
         {
             var numberOfNewScanlinesInHardwareBuffer = _rnd.Next(480, 520);
-            var builders = ScanlinePool.Instance.Take(numberOfNewScanlinesInHardwareBuffer);
+            var builders = _scanLinePool.Take(numberOfNewScanlinesInHardwareBuffer);
             foreach (var scanLine in builders)
             {
                 _rnd.NextBytes(scanLine.Pixels);

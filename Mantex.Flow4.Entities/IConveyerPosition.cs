@@ -9,6 +9,6 @@ namespace Flow4.Entities
 {
     public interface IConveyerPosition : IRefCountedEntity
     {
-        int Position { get; }
+        int Value { get; }
     }
 }

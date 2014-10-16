@@ -18,7 +18,7 @@ namespace Flow4.Machine.Tests
         public FakeDetectorTests()
         {
             factory = new FeedFactory();
-            detector = new Detector(factory);
+            detector = new Detector(factory, new ScanlinePool(1024));
         }
 
         [TestMethod]
@@ -37,6 +37,7 @@ namespace Flow4.Machine.Tests
         }
 
         [TestMethod]
+        [TestCategory("Slow")]
         public void Detector_writes_frames_to_both_feeds()
         {
             var highFeed = factory.GetFeedOf<IFrame>("RawHighEnergyFrameFeed").Subscribe();

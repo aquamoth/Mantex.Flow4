@@ -1,14 +1,14 @@
-﻿using Flow4.IMachine;
+﻿using Flow4.Entities.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Flow4.IMachine
+namespace Flow4.Entities
 {
-    public interface IConveyer : IMachineController
+    public interface IScanlinePool : IPool<ScanlineBuilder>
     {
-        void ResetPosition();
+
     }
 }

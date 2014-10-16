@@ -9,7 +9,7 @@ namespace Flow4.Entities
 {
     public class ConveyerPositionBuilder : BaseRefCountedEntity, IBuilder<IConveyerPosition>, IConveyerPosition
     {
-        public int Position { get; set; }
+        public int Value { get; set; }
 
         public IConveyerPosition Commit()
         {

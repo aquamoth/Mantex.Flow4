@@ -10,11 +10,12 @@ namespace Flow4.Machine
 {
     public class Executive : BaseMachineController, IExecutive
     {
-        public Executive(IScanner scanner, IMarshaller marshaller)
+        public Executive(IScanner scanner, IMarshaller marshaller, IConveyer conveyer)
             : base(0)
         {
             this.MonitoredControllers.Add(scanner);
             this.MonitoredControllers.Add(marshaller);
+            this.MonitoredControllers.Add(conveyer);
             //TODO: Add references to AUX, Climate and Housing
         }
     }

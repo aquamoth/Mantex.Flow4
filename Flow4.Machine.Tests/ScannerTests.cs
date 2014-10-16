@@ -18,8 +18,8 @@ namespace Flow4.Machine.Tests
         {
             scanner = new Scanner
             {
-                Xray = new FakeXRay(0,0),
-                Detector = new Detector(new FeedFactory())
+                Xray = new FakeXRay(0, 0),
+                Detector = new Detector(new FeedFactory(), new ScanlinePool(1024))
             };
         }
 
@@ -39,10 +39,11 @@ namespace Flow4.Machine.Tests
         }
         
         [TestMethod]
+        [TestCategory("Slow")]
         public void Scanner_fails_when_xray_breaks()
         {
             scanner.Xray = new BreakingXRay();
-            scanner.Detector = new Detector(new FeedFactory());
+            scanner.Detector = new Detector(new FeedFactory(), new ScanlinePool(1024));
             scanner.Start().Wait();
 
             waitForScannerToFail();
@@ -51,6 +52,7 @@ namespace Flow4.Machine.Tests
         }
 
         [TestMethod]
+        [TestCategory("Slow")]
         public void Scanner_stops_xray_if_detector_fails()
         {
             scanner.Xray = new FakeXRay(0, 0);

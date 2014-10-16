@@ -12,18 +12,22 @@ namespace Flow4.Machine.Tests
     {
         IExecutive executive;
         Marshaller marshaller;
+        IConveyer conveyer;
 
         public ExecutiveTests()
         {
             var feedFactory = new FeedFactory();
-            
-            var scanner = new Scanner();
-            scanner.Detector = new Detector(feedFactory);
-            scanner.Xray = new FakeXRay(0, 0);
+            var scanlinePool = new ScanlinePool(1024);
 
+            var scanner = new Scanner
+            {
+                Detector = new Detector(feedFactory, scanlinePool),
+                Xray = new FakeXRay(0, 0)
+            };
             marshaller = new Marshaller(feedFactory);
+            conveyer = new Conveyer(feedFactory);
             
-            executive = new Executive(scanner, marshaller);
+            executive = new Executive(scanner, marshaller, conveyer);
         }
 
         [TestMethod]

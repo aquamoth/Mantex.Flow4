@@ -2,6 +2,7 @@
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using Flow4.IMachine;
 using Flow4.Machine;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace Flow4.Sample.Castle.Windsor
                 Classes.FromAssemblyContaining<Executive>()
                     .Where(Component.IsInSameNamespaceAs<Executive>())
                     .WithService
-                    .DefaultInterfaces()
+                    .AllInterfaces()
                     .LifestyleTransient()
                 );
         }

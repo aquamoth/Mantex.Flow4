@@ -12,7 +12,6 @@ namespace Flow4.Machine
         public Scanner() 
             : base(100)
         {
-            ScanlinePool.Instance.NumberOfPixels = 1024;
         }
 
         public IDetector Detector { get; set; }

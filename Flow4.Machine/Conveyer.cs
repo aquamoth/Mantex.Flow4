@@ -13,6 +13,8 @@ namespace Flow4.Machine
     {
         IFeed<IConveyerPosition> conveyerPositionFeed;
 
+        public IConveyerPosition Position { get; private set; }
+
         public Conveyer(IFeedFactory feedFactory) 
             : base(100)
         {
@@ -22,7 +24,17 @@ namespace Flow4.Machine
         protected override void OnHeartbeat()
         {
             base.OnHeartbeat();
+            if (Position == null)
+                return;
+            if (Position.Value == int.MaxValue)
+                Position = null;
+            else
+                Position = new ConveyerPositionBuilder { Value = Position.Value + 1 };
+        }
 
+        public void ResetPosition()
+        {
+            Position = new ConveyerPositionBuilder { Value = 0 }.Commit();
         }
     }
 }
