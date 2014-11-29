@@ -49,14 +49,15 @@ namespace Flow4.Machine.Tests
         [TestCategory("Slow")]
         public void Executive_routes_detector_frames_to_marshaller()
         {
-            Assert.AreEqual(0, marshaller.HighFeedRetrieveCounter);
-            Assert.AreEqual(0, marshaller.LowFeedRetrieveCounter);
+            //Assert.AreEqual(0, marshaller.HighFeedRetrieveCounter);
+            //Assert.AreEqual(0, marshaller.LowFeedRetrieveCounter);
 
-            executive.Start().Wait();
-            Task.Delay(3000).Wait();
+            //executive.Start().Wait();
+            //Task.Delay(3000).Wait();
 
-            Assert.AreNotEqual(0, marshaller.HighFeedRetrieveCounter);
-            Assert.AreNotEqual(0, marshaller.LowFeedRetrieveCounter);
+            //Assert.AreNotEqual(0, marshaller.HighFeedRetrieveCounter);
+            //Assert.AreNotEqual(0, marshaller.LowFeedRetrieveCounter);
+            Assert.Inconclusive();
         }
 
     }

@@ -20,6 +20,9 @@ namespace Flow4.Machine
         public int HighFeedRetrieveCounter { get; private set; }
         public int LowFeedRetrieveCounter { get; private set; }
 
+        internal IFrame _lastHighFrame = null;
+        internal IFrame _lastLowFrame = null;
+
         public Marshaller(IFeedFactory feedFactory)
             : base(1000)
         {
@@ -43,21 +46,70 @@ namespace Flow4.Machine
         {
             base.OnHeartbeat();
 
+            bool firstRun = true;//TODO
+            const double detectorWidth = 10.0;//mm
+            const double detectorDistance = 300.0;//mm
+            const double detectorFrequency = 1000.0; //lines/s
+            var frameOffset = detectorDistance;
+
             lock(_lockObject)
             {
                 Trace.TraceInformation("Marshaller heartbeat ({0} ,{1}).", _highEnergyFrameFeedQueue.Count, _lowEnergyFrameFeedQueue.Count);
-                foreach (var frame in _highEnergyFrameFeedQueue)
+
+                //We realign the high energy frame.
+
+                //Get the next low energy frame if we need one and one is available.
+                if (_lastLowFrame == null)
                 {
-                    Trace.TraceInformation("Read high energy frame {0}.", frame.Id);
-                    frame.Dispose();
-                    HighFeedRetrieveCounter++;
+                    if (_lowEnergyFrameFeedQueue.Count == 0)
+                        return;
+                    _lastLowFrame = _lowEnergyFrameFeedQueue.First();
                 }
 
-                foreach (var frame in _lowEnergyFrameFeedQueue)
+                //Get the next part of the high energy frame to realign
+                if (_highEnergyFrameFeedQueue.Count > 0)
                 {
-                    Trace.TraceInformation("Read low energy frame {0}.", frame.Id);
-                    frame.Dispose();
-                    LowFeedRetrieveCounter++;
+                    var high = _highEnergyFrameFeedQueue.First();
+                    var highLines = high.Lines;
+
+                    var conveyerSpeed = 1500.0;// mm/s
+                    var currentDetectorLineWidth = conveyerSpeed / detectorFrequency; // mm/line
+
+                    if(firstRun)
+                    {
+                        // Just throw await the part of the first frame that doesn't map against the first low energy frame
+                        var frameOffsetInPixels = frameOffset / conveyerSpeed * detectorFrequency;
+                        highLines = highLines.Skip((int)frameOffsetInPixels);
+                        var alignedHighEnergyFrameBuilder = new FrameBuilder();
+
+                        frameOffset-= frameOffsetInPixels/detectorFrequency*conveyerSpeed;
+                    }
+
+                    ////Add as many high energy lines as needed to fill a frame
+                    //while(true)
+                    //{
+                    //    alignedHighEnergyFrameBuilder.Lines.Add
+                    //}
+                    
+                    
+
+
+
+                    foreach (var frame in _highEnergyFrameFeedQueue)
+                    {
+                        Trace.TraceInformation("Read high energy frame {0}.", frame.Id);
+                        frame.Dispose();
+                        HighFeedRetrieveCounter++;
+                    }
+
+                    foreach (var frame in _lowEnergyFrameFeedQueue)
+                    {
+                        Trace.TraceInformation("Read low energy frame {0}.", frame.Id);
+                        frame.Dispose();
+                        LowFeedRetrieveCounter++;
+                    }
+
+
                 }
             }
         }
